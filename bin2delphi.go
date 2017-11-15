@@ -9,24 +9,24 @@ import (
 )
 
 var (
-	packageName = flag.String("unit", "Main", "Unit name. Empty string to omit unit boilerplate.")
-	varName     = flag.String("const", "", "Constant name to use. Must not be empty.")
+	unitName  = flag.String("unit", "Main", "Unit name. Empty string to omit unit boilerplate.")
+	constName = flag.String("const", "", "Constant name to use. Must not be empty.")
 )
 
 func main() {
 	flag.Parse()
 
-	if *varName == "" {
+	if *constName == "" {
 		flag.Usage()
 		return
 	}
 
-	if *packageName != "" {
-		fmt.Print(`unit Main;
+	if *unitName != "" {
+		fmt.Printf(`unit %s;
 
 interface
 
-`)
+`, *unitName)
 	}
 
 	gen := generator{bytesInLine: maxBytesInLine}
@@ -39,9 +39,9 @@ interface
 	}
 	fmt.Printf(`const
   %s: array [0 .. %d] of Byte = (%s
-);`, *varName, gen.byteCount-1, gen.buf.Bytes())
+);`, *constName, gen.byteCount-1, gen.buf.Bytes())
 
-	if *packageName != "" {
+	if *unitName != "" {
 		fmt.Print(`
 
 implementation
