@@ -21,12 +21,14 @@ func main() {
 		return
 	}
 
-	if *unitName != "" {
-		fmt.Printf(`unit %s;
+	wantUnitBoilerplate := *unitName != ""
 
-interface
-
-`, *unitName)
+	if wantUnitBoilerplate {
+		if !ascii(*constName) || !ascii(*unitName) {
+			// Encode this as UTF-8, start with the BOM.
+			fmt.Print(0xEF, 0xBB, 0xBF)
+		}
+		fmt.Printf("unit %s;\r\n\r\ninterface\r\n\r\n", *unitName)
 	}
 
 	gen := generator{bytesInLine: maxBytesInLine}
@@ -37,18 +39,26 @@ interface
 	if gen.byteCount == 0 {
 		panic("Delphi constant arrays cannot be empty (size 0)")
 	}
-	fmt.Printf(`const
-  %s: array [0 .. %d] of Byte = (%s
-);`, *constName, gen.byteCount-1, gen.buf.Bytes())
 
-	if *unitName != "" {
-		fmt.Print(`
+	fmt.Printf(
+		"const\r\n  %s: array [0 .. %d] of Byte = (%s\r\n);",
+		*constName,
+		gen.byteCount-1,
+		gen.buf.Bytes(),
+	)
 
-implementation
-
-end.
-`)
+	if wantUnitBoilerplate {
+		fmt.Print("\r\n\r\nimplementation\r\n\r\nend.\r\n")
 	}
+}
+
+func ascii(s string) bool {
+	for _, b := range s {
+		if b >= 128 {
+			return false
+		}
+	}
+	return true
 }
 
 type generator struct {
@@ -65,7 +75,7 @@ func (g *generator) Write(p []byte) (int, error) {
 	}
 	for i, b := range p {
 		if g.bytesInLine >= maxBytesInLine {
-			fmt.Fprint(&g.buf, "\n    ")
+			fmt.Fprint(&g.buf, "\r\n    ")
 			g.bytesInLine = 0
 		} else {
 			fmt.Fprint(&g.buf, " ")
