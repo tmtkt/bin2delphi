@@ -2,7 +2,7 @@
 
 Install with
 
-	go install github.com/gonutz/bin2delphi/cmd/bin2delphi@latest
+	go install github.com/tmtkt/bin2delphi/cmd/bin2delphi@latest
 
 Usage:
 
@@ -48,7 +48,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gonutz/bin2delphi"
+	"github.com/tmtkt/bin2delphi"
 )
 
 func main() {

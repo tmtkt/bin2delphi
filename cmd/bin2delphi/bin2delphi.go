@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/gonutz/bin2delphi"
+	"github.com/tmtkt/bin2delphi"
 )
 
 var (

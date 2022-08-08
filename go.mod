@@ -1,4 +1,4 @@
-module github.com/gonutz/bin2delphi
+module github.com/tmtkt/bin2delphi
 
 go 1.11
 

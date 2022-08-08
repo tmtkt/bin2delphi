@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gonutz/bin2delphi"
+	"github.com/tmtkt/bin2delphi"
 	"github.com/gonutz/check"
 )
 
